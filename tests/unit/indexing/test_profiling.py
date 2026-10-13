@@ -83,6 +83,19 @@ class TestWorkflowProfiler:
         assert metrics.overall > 0
         assert metrics.peak_memory_bytes > 0
 
+    def test_captures_elapsed_for_fast_bodies(self):
+        """Verify a microsecond-scale body still yields positive elapsed time.
+
+        Guards against wall-clock timing: time.time() on Windows with
+        Python <= 3.12 has a 15.6 ms resolution, which collapses
+        microsecond-scale bodies to 0.0. Elapsed timing must rely on a
+        high-resolution monotonic clock.
+        """
+        with WorkflowProfiler() as profiler:
+            _ = [0] * 1000  # microsecond-scale body
+
+        assert profiler.metrics.overall > 0
+
     def test_multiple_profilers_independent(self):
         """Verify multiple profiler instances don't interfere."""
         with WorkflowProfiler() as profiler1:

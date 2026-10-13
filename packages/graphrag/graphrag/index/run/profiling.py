@@ -34,7 +34,7 @@ class WorkflowProfiler:
     def __enter__(self) -> Self:
         """Start profiling: begin tracemalloc and record start time."""
         tracemalloc.start()
-        self._start_time = time.time()
+        self._start_time = time.perf_counter()
         return self
 
     def __exit__(
@@ -44,7 +44,7 @@ class WorkflowProfiler:
         exc_tb: TracebackType | None,
     ) -> None:
         """Stop profiling: capture metrics and stop tracemalloc."""
-        self._elapsed = time.time() - self._start_time
+        self._elapsed = time.perf_counter() - self._start_time
         self._current_memory, self._peak_memory = tracemalloc.get_traced_memory()
         self._tracemalloc_overhead = tracemalloc.get_tracemalloc_memory()
         tracemalloc.stop()

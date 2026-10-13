@@ -1,0 +1,4 @@
+{
+  "type": "patch",
+  "description": "Use time.perf_counter() for WorkflowProfiler and pipeline total_runtime so elapsed metrics stay positive and monotonic on Windows/Python <= 3.12"
+}

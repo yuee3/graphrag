@@ -119,7 +119,7 @@ async def _run_pipeline(
     config: GraphRagConfig,
     context: PipelineRunContext,
 ) -> AsyncIterable[PipelineRunResult]:
-    start_time = time.time()
+    start_time = time.perf_counter()
 
     last_workflow = "<startup>"
 
@@ -145,7 +145,7 @@ async def _run_pipeline(
                 logger.info("Halting pipeline at workflow request")
                 break
 
-        context.stats.total_runtime = time.time() - start_time
+        context.stats.total_runtime = time.perf_counter() - start_time
         logger.info("Indexing pipeline complete.")
         await _dump_stats_json(context)
         await _dump_context_json(context)
